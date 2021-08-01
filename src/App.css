@@ -1,0 +1,249 @@
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.header {
+  background: #2a3261;
+  display: flex;
+  flex-direction: row;
+  padding-left: .5rem;
+  padding-right: .5rem;
+}
+
+.header-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.header-fixed + .content {
+  margin-top: 3.3rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+  .content > div {
+    display: flex;
+    margin: .5rem;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px lightgray, -1px -1px 1px lightgray;
+  }
+    .content div img {
+      cursor: pointer;
+      height: auto;
+      width: 100%;
+    }
+
+.header-node, .body-node {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  width: 13%;
+  padding-left: 10px;
+}
+
+.header-node:first-child,
+.body-node:first-child {
+  width: 12%;
+  padding-left: 0;
+}
+
+.header-node:nth-child(2),
+.body-node:nth-child(2) {
+  width: 20%;
+}
+
+.header-node:nth-child(3),
+.header-node:nth-child(4),
+.body-node:nth-child(3),
+.body-node:nth-child(4) {
+  width: 15%;
+}
+
+.header-node:nth-child(5),
+.body-node:nth-child(5) {
+  width: 25%;
+}
+
+.header-node:nth-child(5),
+.header-node:nth-child(6),
+.body-node:nth-child(5),
+.body-node:nth-child(6) {
+  justify-content: center;
+  padding-left: 0;
+}
+
+.header-node {
+  color: #d4d4d4;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.body-node {
+  flex-wrap: wrap;
+}
+
+.body-node-name {
+  cursor: pointer;
+}
+  .body-node-name:hover {
+    text-decoration: underline;
+  }
+
+.helper {
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  overflow: hidden;
+  position: fixed;
+  top: 4px;
+  right: 4px;
+  z-index: 10;
+}
+  .helper img {
+    height: auto;
+    width: 25px;
+    cursor: pointer;
+  }
+
+.helper-active {
+  background: #539eca;
+  color: white;
+}
+  .helper-active ul {
+    margin: .5rem;
+  }
+  .helper-active li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: .5rem;
+  }
+  .helper-active input {
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+  .helper-active select {
+    margin-left: .2rem;
+  }
+  .helper-active input,
+  .helper-active select,
+  .helper-active button {
+    cursor: pointer;
+  }
+  .helper-active button {
+    background: #c74a4a;
+    border: none;
+    color: white;
+    font-weight: bold;
+    width: 15%;
+  }
+    .helper-active button:hover {
+      background: #ce7878;
+    }
+
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgb(211, 211, 211, .8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 11;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  border-radius: 10px;
+  border: 1px solid black;
+  overflow: auto;
+  padding: 20px;
+  background: white;
+}
+  .modal-body button {
+    align-self: center;
+    background: #2ebd25;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    width: 150px;
+    margin-top: 2rem;
+    padding: .5rem;
+  }
+    .modal-body button:hover {
+      background: #70e069;
+    }
+  .modal-body > div {
+    display: flex;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+    .modal-body > div img {
+      height: 295px;
+      width: 210px;
+    }
+    .modal-body > div p {
+      margin: 1rem;
+      margin-top: 0;
+    }
+    .modal-body div:nth-child(n+1) {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+.pagenator {
+  display: flex;
+  justify-content: center;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+  .pagenator li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    width: 20px;
+    font-size: 20px;
+    margin: 5px;
+    overflow: hidden;
+    padding: 8px;
+    user-select: none;
+  }
+    .pagenator li:nth-child(1),
+    .pagenator li:nth-child(3) {
+      border-radius: 50%;
+      color: #2a3261;
+      cursor: pointer;
+      padding-top: 6px;
+      padding-bottom: 10px;
+    }
+    .pagenator li:nth-child(1):hover,
+    .pagenator li:nth-child(3):hover {
+      background: lightgray;
+    }
+
+@media screen and (max-width: 600px) {
+  .adv {
+    display: none;
+  }
+
+  .header-node:nth-child(n),
+  .body-node:nth-child(n) {
+    width: calc(100% / 3);
+  }
+}
