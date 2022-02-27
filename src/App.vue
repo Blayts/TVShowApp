@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ComputedRef, computed, unref } from 'vue';
+import { ComputedRef, Ref, computed, ref, unref } from 'vue';
 import { Alert, Layout, LayoutContent, LayoutHeader, /*LayoutFooter,*/ Spin } from 'ant-design-vue';
 import Filters from './components/Filters.vue';
 // import Footer from './components/Footer.vue';
@@ -9,7 +9,7 @@ import { IShow } from './interfaces';
 
 const { data, error, loading } = useData();
 
-// const filteredShows: Ref<IShow[]> = ref([]);
+const filteredShows: Ref<IShow[]> = ref([]);
 
 const genres: ComputedRef<string[]> = computed(() => {
   if(!unref(data).length) { return [] }
@@ -34,10 +34,10 @@ const genres: ComputedRef<string[]> = computed(() => {
   <Spin v-else size="large" :spinning="loading" tip="Загрузка...">
     <Layout>
       <LayoutHeader>
-        <Filters :genres="genres" :shows="data" />
+        <Filters :genres="genres" :shows="data" v-model:filtered="filteredShows" />
       </LayoutHeader>
       <LayoutContent>
-        <Table :data="data" />
+        <Table :data="filteredShows" />
       </LayoutContent>
       <!-- <LayoutFooter>
         <Footer />

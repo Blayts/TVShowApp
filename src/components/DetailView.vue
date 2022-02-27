@@ -11,7 +11,7 @@ import {
   Row
 } from 'ant-design-vue';
 import { defineEmits, defineProps, Ref, shallowRef } from 'vue';
-import { ISchedule, IShow } from '../interfaces';
+import { INetwork, ISchedule, IShow } from '../interfaces';
 const emit = defineEmits(['close']);
 const props = defineProps({
   show: { type: Object, required: true }
@@ -24,9 +24,17 @@ const genresShow: Ref<string> = shallowRef(genres.join(' | '));
 const scheduleShow: Ref<string> = shallowRef(getScheduleShow(schedule));
 const style: Ref<any> = shallowRef({ fontWeight: '600' });
 
+function getNameNetwork(network: INetwork) {
+  return network?.name ?? '';
+}
+
 function getScheduleShow({ days, time }: ISchedule) {
   const translatedDays: string[] = days.map(getTranslatedDay);
   return `${translatedDays.join(' | ')} в ${time} (${runtime} мин)`
+}
+
+function getStatus(status: string) {
+  return { 'Ended': 'Закончен', 'Running': 'Идёт'}[status];
 }
 
 function getTranslatedDay(day: string) {
@@ -48,16 +56,16 @@ console.log(genres, props.show);
 <template>
   <Modal centered visible width="1024px" wrap-class-name="detail-view" :footer="null" :title="show.name" @cancel="emit('close')">
     <Row>
-      <Col :span="8">
+      <Col>
         <Image :src="show.image.original"></Image>
       </Col>
-      <Col :span="16" v-html="show.summary"></Col>
+      <Col :span="17" v-html="show.summary"></Col>
     </Row>
     <Collapse>
       <CollapsePanel header="Информация о шоу">
         <Descriptions :label-style="style">
-          <DescriptionsItem label="Канал">{{ show.network.name }}</DescriptionsItem>
-          <DescriptionsItem label="Статус">{{ show.status }}</DescriptionsItem>
+          <DescriptionsItem label="Канал">{{ getNameNetwork(show.network) }}</DescriptionsItem>
+          <DescriptionsItem label="Статус">{{ getStatus(show.status) }}</DescriptionsItem>
           <DescriptionsItem label="Тип">{{ show.type }}</DescriptionsItem>
           <DescriptionsItem label="Жанры">{{ genresShow }}</DescriptionsItem>
         </Descriptions>
@@ -78,7 +86,11 @@ console.log(genres, props.show);
     .ant-modal {
       &-body {
         padding: 8px;
+        .ant-image-img {
+          width: 270px;
+        }
         & > .ant-row {
+          min-height: 370px;
           padding-bottom: 8px;
           .ant-col:not(:first-child) {
             padding-left: 8px;

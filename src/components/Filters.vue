@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ComputedRef, Ref, computed, defineEmits, defineProps, ref, unref } from 'vue';
+import { ComputedRef, Ref, computed, defineEmits, defineProps, ref, unref, watch } from 'vue';
 import { Input, Select, Row } from 'ant-design-vue';
 import { IShow } from '../interfaces';
 
@@ -20,30 +20,37 @@ const props = defineProps({
   },
 });
 
-const genre: Ref<string> = ref('');
+const genre: Ref<string> = ref(null);
 const name: Ref<string> = ref('');
 
 const options: ComputedRef<IOptionSelect> = computed(() =>
   props.genres.map((genre: string) => ({ label: genre, value: genre }))
 );
-const filtered: ComputedRef<any> = computed(() => {
-  const fileredShows: IShow[] = props.shows.filter((show: IShow) =>
-    show?.genres.includes(unref(genre)) ?? false
+const searchedShows: ComputedRef<IShow[]> = computed(() => {
+  if(!unref(name).length) {
+    return props.shows;
+  }
+  return props.shows.filter(
+    (show: IShow) => show.name.toLowerCase().includes(unref(name).toLowerCase())
   );
-  // const searchedShows: IShow[] = fileredShows.filter((show: IShow) =>
-  //   show.name.compareLocale(unref(name))
-  // );
-  console.log('UPDATE', fileredShows);
-  emit('update:filtered', fileredShows);
-  return fileredShows;
 });
+const filteredShows: ComputedRef<IShow[]> = computed(() => {
+    if(!unref(genre)) {
+      return unref(searchedShows);
+    }
+    return unref(searchedShows).filter(
+      (show: IShow) => show.genres.includes(unref(genre))
+    );
+  }
+);
 
-console.log(filtered);
+watch(filteredShows, (shows) => {
+  emit('update:filtered', shows);
+});
 
 </script>
 
 <template>
-  <div style="display: none">{{filtered}}</div>
   <Row align="middle" justify="space-between">
     <Input placeholder="Поиск по имени..." v-model:value="name" />
     <Select placeholder="Выберите жанр" v-model:value="genre" :allow-clear="true" :options="options" />

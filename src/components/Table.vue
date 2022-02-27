@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ComputedRef, Ref, computed, defineProps, shallowRef } from 'vue';
-import { Table, Tag } from 'ant-design-vue';
+import { Image, Table, Tag } from 'ant-design-vue';
 import { IShow } from '../interfaces';
 import DetailView from './DetailView.vue';
 
@@ -33,37 +33,39 @@ const columns: Ref<IColumn[]> = shallowRef([
     customCell: cellCustomEffect,
     dataIndex: 'image',
     title: 'Обложка',
-    key: 'image',
-    width: 100
+    width: 100,
+    slots: { customRender: 'image' }
   },
   {
     customCell: cellCustomEffect,
     dataIndex: 'name',
     title: 'Название',
-    key: 'name'
+    sorter: (a, b) => a.name.localeCompare(b.name)
   },
   {
     dataIndex: 'genres',
     title: 'Жанр',
-    key: 'genres',
     width: 100,
     slots: { customRender: 'genres' }
   },
   {
     dataIndex: 'country',
     title: 'Страна',
-    key: 'country'
+    width: '15%'
   },
   {
+    align: 'center',
     dataIndex: 'runtime',
     title: 'Длительность(мин)',
-    key: 'runtime'
+    width: 170
   },
   {
+    align: 'center',
     dataIndex: 'rating',
     title: 'Рейтинг',
-    key: 'rating',
-    slots: { customRender: 'rating' }
+    slots: { customRender: 'rating' },
+    sorter: (a, b) => a.rating - b.rating,
+    width: '15%'
   }
 ]);
 
@@ -87,10 +89,7 @@ const showsById: ComputedRef<IShowById> = computed(() =>
 function cellCustomEffect({ key }: any): void {
   return {
     style: { cursor: 'pointer' },
-    onClick: () => {
-      activeShow.value = showsById.value[key];
-      console.log('Is show!!!', activeShow.value);
-    }
+    onClick: () => { activeShow.value = showsById.value[key]; }
   };
 }
 
@@ -117,6 +116,9 @@ function onClose() {
 
 <template>
   <Table bordered :columns="columns" :data-source="dataTable">
+    <template #image="{ text }">
+      <Image :src="text" />
+    </template>
     <template #genres="{ record }">
       <Tag v-for="item in record.genres" color="processing" :key="item">{{item}}</Tag>
     </template>
@@ -138,6 +140,13 @@ function onClose() {
       .ant-table {
         height: @height-table;
         overflow: auto;
+        td:first-child {
+          padding: 1px;
+        }
+        td:nth-child(2) {
+          font-style: italic;
+          font-weight: 600;
+        }
         .ant-tag {
           margin: 2px;
         }
