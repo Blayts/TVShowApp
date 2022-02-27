@@ -30,7 +30,7 @@ const genres: ComputedRef<string[]> = computed(() => {
 </script>
 
 <template>
-  <Alert v-if="error" />
+  <Alert v-if="error" :message="error" />
   <Spin v-else size="large" :spinning="loading" tip="Загрузка...">
     <Layout>
       <LayoutHeader>

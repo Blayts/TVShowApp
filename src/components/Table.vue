@@ -2,6 +2,7 @@
 import { ComputedRef, Ref, computed, defineProps, shallowRef } from 'vue';
 import { Table, Tag } from 'ant-design-vue';
 import { IShow } from '../interfaces';
+import DetailView from './DetailView.vue';
 
 interface IColumn {
   dataIndex: string,
@@ -17,6 +18,7 @@ interface IDataRow {
   rating: number | null,
   key: number
 }
+interface IShowById { [id: number]: IShow }
 
 const props = defineProps({
   data: {
@@ -25,6 +27,7 @@ const props = defineProps({
   }
 });
 
+const activeShow: Ref<IShow> = shallowRef(null);
 const columns: Ref<IColumn[]> = shallowRef([
   {
     customCell: cellCustomEffect,
@@ -34,6 +37,7 @@ const columns: Ref<IColumn[]> = shallowRef([
     width: 100
   },
   {
+    customCell: cellCustomEffect,
     dataIndex: 'name',
     title: 'Название',
     key: 'name'
@@ -73,12 +77,20 @@ const dataTable: ComputedRef<IDataRow[]> = computed(() =>
     rating: show.rating.average,
     key: show.id
   }))
-)
+);
+const showsById: ComputedRef<IShowById> = computed(() =>
+  (props.data as IShow[]).reduce(
+    (acc: IShowById, show: IShow) => ({ ...acc, [show.id]: acc[show.id] ?? show }), {}
+  )
+);
 
-function cellCustomEffect() {
+function cellCustomEffect({ key }: any): void {
   return {
     style: { cursor: 'pointer' },
-    onClick: () => console.log('CLick!!!')
+    onClick: () => {
+      activeShow.value = showsById.value[key];
+      console.log('Is show!!!', activeShow.value);
+    }
   };
 }
 
@@ -97,10 +109,14 @@ function getColorRating(value: number = 0): string {
   }
 }
 
+function onClose() {
+  activeShow.value = null;
+}
+
 </script>
 
 <template>
-  <Table bordered :columns="columns" :data-source="dataTable" :pagination="true">
+  <Table bordered :columns="columns" :data-source="dataTable">
     <template #genres="{ record }">
       <Tag v-for="item in record.genres" color="processing" :key="item">{{item}}</Tag>
     </template>
@@ -108,6 +124,7 @@ function getColorRating(value: number = 0): string {
       <Tag v-if="text" :color="getColorRating(text)" >{{text}}</Tag>
     </template>
   </Table>
+  <DetailView v-if="activeShow" :show="activeShow" @close="onClose" />
 </template>
 
 <style lang="less">
@@ -122,7 +139,7 @@ function getColorRating(value: number = 0): string {
         height: @height-table;
         overflow: auto;
         .ant-tag {
-          margin: 2px;      
+          margin: 2px;
         }
       }
       .ant-pagination.ant-table-pagination {

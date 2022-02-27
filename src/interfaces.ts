@@ -34,7 +34,7 @@ export interface IRating {
   average: number
 };
 
-export interface IShedule {
+export interface ISchedule {
   time: string,
   days: string[]
 };
@@ -57,7 +57,7 @@ export interface IShow {
   averageRuntime: number,
   premiered: string,
   officialSite": string,
-  schedule: IShedule,
+  schedule: ISchedule,
   rating: IRating,
   weight: number,
   network: INetwork,
